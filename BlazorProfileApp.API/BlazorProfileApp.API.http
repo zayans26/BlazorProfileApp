@@ -1,0 +1,6 @@
+@BlazorProfileApp.API_HostAddress = http://localhost:5023
+
+GET {{BlazorProfileApp.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

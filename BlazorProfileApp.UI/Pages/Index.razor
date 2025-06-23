@@ -1,0 +1,76 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3 class="mb-4">Profile Directory</h3>
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Registered Profiles</span>
+        <button class="btn btn-sm btn-primary" @onclick="NavigateToAdd">
+            <i class="fas fa-plus me-1"></i> Add New
+        </button>
+    </div>
+
+    <div class="card-body p-0">
+        @if (profiles == null)
+        {
+            <div class="p-3">Loading...</div>
+        }
+        else if (!profiles.Any())
+        {
+            <div class="p-3 text-muted">No profiles found.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Email</th>
+                            <th class="text-nowrap">Phone</th>
+                            <th class="text-end"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var profile in profiles)
+                        {
+                            <tr>
+                                <td>@profile.FirstName @profile.LastName</td>
+                                <td>@profile.Email</td>
+                                <td>@profile.PhoneNumber</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-secondary" title="Edit" @onclick="@(() => NavigateToUpdate(profile.Id))">
+                                        <i class="fas fa-pen"></i> Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<PersonProfile>? profiles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        profiles = await Http.GetFromJsonAsync<List<PersonProfile>>("api/profile");
+    }
+
+    void NavigateToAdd() => Navigation.NavigateTo("/add");
+    void NavigateToUpdate(int id) => Navigation.NavigateTo($"/update/{id}");
+
+    public class PersonProfile
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string PhoneNumber { get; set; } = "";
+    }
+}
