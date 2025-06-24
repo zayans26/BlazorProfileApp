@@ -1,41 +1,49 @@
 ﻿@page "/add"
-@page "/update/{id:int}"
+@page "/update/{id:int}"  
 
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
+<!-- Bootstrap container and card layout -->
 <div class="container mt-4">
     <div class="card shadow-sm">
+        <!-- Header with icon and dynamic title -->
         <div class="card-header bg-primary text-white fw-semibold">
             <i class="fas @(IsEditMode ? "fa-pen" : "fa-user-plus") me-2"></i>
             @(IsEditMode ? "Update Profile" : "Add New Profile")
         </div>
 
         <div class="card-body">
+            <!-- Form bound to the profile object -->
             <EditForm Model="@profile" OnValidSubmit="HandleSubmit">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
+                <!-- First Name Field -->
                 <div class="mb-3">
                     <label class="form-label">First Name</label>
                     <InputText class="form-control" @bind-Value="profile.FirstName" />
                 </div>
 
+                <!-- Last Name Field -->
                 <div class="mb-3">
                     <label class="form-label">Last Name</label>
                     <InputText class="form-control" @bind-Value="profile.LastName" />
                 </div>
 
+                <!-- Email Field -->
                 <div class="mb-3">
                     <label class="form-label">Email</label>
                     <InputText class="form-control" @bind-Value="profile.Email" />
                 </div>
 
+                <!-- Phone Number Field -->
                 <div class="mb-3">
                     <label class="form-label">Phone Number</label>
                     <InputText class="form-control" @bind-Value="profile.PhoneNumber" />
                 </div>
 
+                <!-- Form Action Buttons -->
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-success me-2">
                         <i class="fas fa-check me-1"></i> @(IsEditMode ? "Update" : "Create")
@@ -46,6 +54,7 @@
                 </div>
             </EditForm>
 
+            <!-- Error Message Display -->
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger mt-3">@errorMessage</div>
@@ -55,15 +64,22 @@
 </div>
 
 @code {
+    // Navigate back to the homepage (profile list)
     void NavigateHome() => Navigation.NavigateTo("/");
 
+    // Optional route parameter for edit mode
     [Parameter] public int? id { get; set; }
 
+    // Indicates if the page is in edit mode
     private bool IsEditMode => id.HasValue;
 
+    // Form-bound profile model
     private PersonProfile profile = new();
+
+    // Holds any API or form-level error messages
     private string? errorMessage;
 
+    // On page load: load profile if in edit mode
     protected override async Task OnInitializedAsync()
     {
         if (IsEditMode)
@@ -87,6 +103,7 @@
         }
     }
 
+    // Handles form submission for both add and update
     private async Task HandleSubmit()
     {
         try
@@ -110,7 +127,7 @@
                 }
             }
 
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/"); // Return to home after success
         }
         catch (Exception ex)
         {
@@ -118,6 +135,7 @@
         }
     }
 
+    // Profile model matching backend API contract
     public class PersonProfile
     {
         public int Id { get; set; }

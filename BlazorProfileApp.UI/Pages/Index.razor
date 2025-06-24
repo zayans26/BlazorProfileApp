@@ -1,10 +1,14 @@
 ﻿@page "/"
+
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
+<!-- Page Heading -->
 <h3 class="mb-4">Profile Directory</h3>
 
+<!-- Card container for the profile list -->
 <div class="card shadow-sm">
+    <!-- Card Header with title and 'Add New' button -->
     <div class="card-header d-flex justify-content-between align-items-center">
         <span class="fw-bold">Registered Profiles</span>
         <button class="btn btn-sm btn-primary" @onclick="NavigateToAdd">
@@ -12,15 +16,19 @@
         </button>
     </div>
 
+    <!-- Card Body: Handles loading, empty state, or profile table -->
     <div class="card-body p-0">
+        @* Show loading state while profiles are being fetched *@
         @if (profiles == null)
         {
             <div class="p-3">Loading...</div>
         }
+        @* Show message if no profiles exist *@
         else if (!profiles.Any())
         {
             <div class="p-3 text-muted">No profiles found.</div>
         }
+        @* Render profile table if data exists *@
         else
         {
             <div class="table-responsive">
@@ -30,7 +38,7 @@
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Email</th>
                             <th class="text-nowrap">Phone</th>
-                            <th class="text-end"></th>
+                            <th class="text-end"></th> <!-- Edit button column -->
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +49,7 @@
                                 <td>@profile.Email</td>
                                 <td>@profile.PhoneNumber</td>
                                 <td class="text-end">
+                                    <!-- Edit button for navigating to update screen -->
                                     <button class="btn btn-sm btn-outline-secondary" title="Edit" @onclick="@(() => NavigateToUpdate(profile.Id))">
                                         <i class="fas fa-pen"></i> Edit
                                     </button>
@@ -55,16 +64,22 @@
 </div>
 
 @code {
+    // Holds the list of profiles fetched from the API
     private List<PersonProfile>? profiles;
 
+    // Lifecycle method: fetches data when component initializes
     protected override async Task OnInitializedAsync()
     {
         profiles = await Http.GetFromJsonAsync<List<PersonProfile>>("api/profile");
     }
 
+    // Navigates to the Add Profile form
     void NavigateToAdd() => Navigation.NavigateTo("/add");
+
+    // Navigates to the Update Profile form with the selected ID
     void NavigateToUpdate(int id) => Navigation.NavigateTo($"/update/{id}");
 
+    // Internal model representing a profile (same as API schema)
     public class PersonProfile
     {
         public int Id { get; set; }
