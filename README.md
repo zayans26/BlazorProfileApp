@@ -86,6 +86,7 @@ dotnet run
 | POST   | `/api/profile`        | Add a new profile      |
 | PUT    | `/api/profile/{id}`   | Update a profile by ID |
 | GET    | `/api/profile/{id}`   | Get a profile by ID    |
+| GET    | `/api/profile`        | Get All Profiles       |
 
 ---
 
