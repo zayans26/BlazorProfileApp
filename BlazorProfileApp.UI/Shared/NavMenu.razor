@@ -1,29 +1,39 @@
-﻿
+﻿<!-- Top navigation bar with branding and hamburger button -->
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
+        <!-- Brand name (with a placeholder for Zayan) -->
         <a class="navbar-brand" href="">Assignment: @@Zayan</a>
+
+        <!-- Toggler button for collapsing/expanding the nav menu -->
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
 
+<!-- Sidebar navigation menu -->
+<!-- The class 'collapse' will hide/show the menu based on the value of NavMenuCssClass -->
+<!-- Clicking anywhere in the menu will also toggle (close) it -->
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <!-- Navigation link to the home page -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <i class="fas fa-house me-2"></i> Home
             </NavLink>
         </div>
-       
     </nav>
 </div>
 
 @code {
+    // Boolean to track whether the navigation menu is collapsed
     private bool collapseNavMenu = true;
 
+    // CSS class used to hide/show the nav menu
+    // When collapseNavMenu is true, apply the "collapse" class
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+    // Toggles the nav menu visibility
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
